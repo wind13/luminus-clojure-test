@@ -2,7 +2,7 @@
 
 generated using Luminus version "2.9.10.30"
 
-FIXME
+Just a luminus clojure test project.
 
 ## Prerequisites
 
@@ -18,4 +18,4 @@ To start a web server for the application, run:
 
 ## License
 
-Copyright © 2016 FIXME
+MIT licensed
