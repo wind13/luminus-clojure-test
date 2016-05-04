@@ -30,11 +30,24 @@
 
   :jvm-opts ["-server" "-Dconf=.lein-env"]
   :source-paths ["src/clj"]
-  :resource-paths ["resources"]
+  :resource-paths ["resources" "target/cljsbuild"]
+
+  ;; start -- clojure script support.
+  :cljsbuild {:builds {:app {:source-paths ["src-cljs"]
+                             :figwheel true
+                             :compiler {:output-to     "target/cljsbuild/public/js/app.js"
+                                        :output-dir    "target/cljsbuild/public/js/out"
+                                        :source-map    true
+                                        :externs       ["react/externs/react.js"]
+                                        :optimizations :none
+                                        :main "<app>.core"
+                                        :asset-path "/js/out"
+                                        :pretty-print  true}}}}
+  ;; end -- clojure script support.
 
   :main luminus-clojure-test.core
 
-  :plugins [[lein-cprop "1.0.1"]]
+  :plugins [[lein-cprop "1.0.1"] [lein-cljsbuild "1.1.1"]]
   :target-path "target/%s/"
   :profiles
   {:uberjar {:omit-source true
@@ -43,6 +56,14 @@
              :uberjar-name "luminus-clojure-test.jar"
              :source-paths ["env/prod/clj"]
              :resource-paths ["env/prod/resources"]}
+   ;; start --clojure script support
+   :hooks ['leiningen.cljsbuild]
+   :cljsbuild {:jar true
+               :builds {:app
+                        {:compiler
+                         {:optimizations :advanced
+                          :pretty-print false}}}}
+   ;; end -- clojure script support.
    :dev           [:project/dev :profiles/dev]
    :test          [:project/test :profiles/test]
    :project/dev  {:dependencies [[prone "1.1.0"]
