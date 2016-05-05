@@ -1,5 +1,6 @@
 (ns user
   (:require [mount.core :as mount]
+            [luminus-clojure-test.figwheel :refer [start-fw stop-fw cljs]]
             luminus-clojure-test.core))
 
 (defn start []

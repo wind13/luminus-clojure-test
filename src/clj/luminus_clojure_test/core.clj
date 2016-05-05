@@ -2,10 +2,10 @@
   (:require [luminus-clojure-test.handler :as handler]
             [luminus.repl-server :as repl]
             [luminus.http-server :as http]
+            [luminus-migrations.core :as migrations]
             [luminus-clojure-test.config :refer [env]]
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.tools.logging :as log]
-            [luminus-clojure-test.env :refer [defaults]]
             [luminus.logger :as logger]
             [mount.core :as mount])
   (:gen-class))
@@ -19,7 +19,7 @@
                 :start
                 (http/start
                   (-> env
-                      (assoc :handler handler/app)
+                      (assoc :handler (handler/app))
                       (update :port #(or (-> env :options :port) %))))
                 :stop
                 (http/stop http-server))
@@ -32,6 +32,7 @@
                 :stop
                 (when repl-server
                   (repl/stop repl-server)))
+
 
 (defn stop-app []
   (doseq [component (:stopped (mount/stop))]

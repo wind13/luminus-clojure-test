@@ -2,17 +2,24 @@
   (:require [compojure.core :refer [routes wrap-routes]]
             [luminus-clojure-test.layout :refer [error-page]]
             [luminus-clojure-test.routes.home :refer [home-routes]]
-            [luminus-clojure-test.routes.services :refer [service-routes]]
             [compojure.route :as route]
-            [luminus-clojure-test.middleware :as middleware]))
+            [guestbook.env :refer [defaults]]
+            [mount.core :as mount]
+            [guestbook.middleware :as middleware]))
+
+(mount/defstate init-app
+                :start ((or (:init defaults) identity))
+                :stop  ((or (:stop defaults) identity)))
 
 (def app-routes
   (routes
-    #'service-routes
-    (wrap-routes #'home-routes middleware/wrap-csrf)
+    (-> #'home-routes
+        (wrap-routes middleware/wrap-csrf)
+        (wrap-routes middleware/wrap-formats))
     (route/not-found
       (:body
         (error-page {:status 404
                      :title "page not found"})))))
 
-(def app (middleware/wrap-base #'app-routes))
+
+(defn app [] (middleware/wrap-base #'app-routes))

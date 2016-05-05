@@ -1,14 +1,14 @@
 (ns luminus-clojure-test.middleware
-  (:require [luminus-clojure-test.layout :refer [*app-context* error-page]]
+  (:require [luminus-clojure-test.env :refer [defaults]]
             [clojure.tools.logging :as log]
-            [luminus-clojure-test.env :refer [defaults]]
+            [luminus-clojure-test.layout :refer [*app-context* error-page]]
+            [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
+            [ring.middleware.webjars :refer [wrap-webjars]]
+            [ring.middleware.format :refer [wrap-restful-format]]
             [luminus-clojure-test.config :refer [env]]
             [ring.middleware.flash :refer [wrap-flash]]
             [immutant.web.middleware :refer [wrap-session]]
-            [ring.middleware.webjars :refer [wrap-webjars]]
-            [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
-            [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
-            [ring.middleware.format :refer [wrap-restful-format]])
+            [ring.middleware.defaults :refer [site-defaults wrap-defaults]])
   (:import [javax.servlet ServletContext]))
 
 (defn wrap-context [handler]
@@ -55,13 +55,12 @@
 
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)
-      wrap-formats
-      wrap-webjars
       wrap-flash
       (wrap-session {:cookie-attrs {:http-only true}})
       (wrap-defaults
         (-> site-defaults
             (assoc-in [:security :anti-forgery] false)
             (dissoc :session)))
+      wrap-webjars
       wrap-context
       wrap-internal-error))

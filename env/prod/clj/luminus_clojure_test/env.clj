@@ -5,4 +5,7 @@
   {:init
    (fn []
      (log/info "\n-=[luminus-clojure-test started successfully]=-"))
+   :stop
+   (fn []
+     (log/info "\n-=[luminus-clojure-test has shutdown successfully]=-"))
    :middleware identity})

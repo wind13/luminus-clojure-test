@@ -8,4 +8,7 @@
    (fn []
      (parser/cache-off!)
      (log/info "\n-=[luminus-clojure-test started successfully using the development profile]=-"))
+   :stop
+   (fn []
+       (log/info "\n-=[guestbook has shutdown successfully]=-"))
    :middleware wrap-dev})
