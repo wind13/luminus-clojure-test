@@ -29,11 +29,43 @@
          [nav-link "#/" "Home" :home collapsed?]
          [nav-link "#/about" "About" :about collapsed?]]]])))
 
+(def state (atom "good"))
+(defn input-text [label-text]
+  [:div
+    [:label label-text]
+    [:input {:type "text"
+             :value @state
+             :on-change #(reset! state (-> % .-target .-value))}]
+    [:label @state]])
+
+(defn btn-test
+  []
+  [:button {:on-click #(reset! state "bad !")} "click"])
+
+(defn input-field [label-text id]
+  (let [value (atom nil)]
+    (fn []
+      [:div
+        [:label "The value is: " @value]
+        [:input {:type "text"
+                 :value @value
+                 :on-change #(reset! value (-> % .-target .-value))}]])))
+
+(defn render-simple []
+  (r/render-component [input-field]
+    (.-body js/document)))
+
 (defn about-page []
   [:div.container
    [:div.row
     [:div.col-md-12
+     (input-text "test input")
+     (input-field "test input" 3)
+     (btn-test)
      "this is the story of luminus-clojure-test... work in progress"]]])
+
+(defn not-found []
+  [:div.container [:h1 "404: Page doesn't exist"]])
 
 (defn home-page []
   [:div.container
@@ -52,6 +84,7 @@
 
 (def pages
   {:home #'home-page
+   :error #'not-found
    :about #'about-page})
 
 (defn page []
@@ -66,6 +99,9 @@
 
 (secretary/defroute "/about" []
   (session/put! :page :about))
+
+(secretary/defroute "*" []
+  (session/put! :page :error))
 
 ;; -------------------------
 ;; History
