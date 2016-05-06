@@ -3,9 +3,9 @@
             [luminus-clojure-test.layout :refer [error-page]]
             [luminus-clojure-test.routes.home :refer [home-routes]]
             [compojure.route :as route]
-            [guestbook.env :refer [defaults]]
+            [luminus-clojure-test.env :refer [defaults]]
             [mount.core :as mount]
-            [guestbook.middleware :as middleware]))
+            [luminus-clojure-test.middleware :as middleware]))
 
 (mount/defstate init-app
                 :start ((or (:init defaults) identity))

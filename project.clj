@@ -40,19 +40,6 @@
   :source-paths ["src/clj" "src/cljc"]
   :resource-paths ["resources" "target/cljsbuild"]
 
-  ;; start -- clojure script support.
-  :cljsbuild {:builds {:app {:source-paths ["src-cljs"]
-                             :figwheel true
-                             :compiler {:output-to     "target/cljsbuild/public/js/app.js"
-                                        :output-dir    "target/cljsbuild/public/js/out"
-                                        :source-map    true
-                                        :externs       ["react/externs/react.js"]
-                                        :optimizations :none
-                                        :main "<app>.core"
-                                        :asset-path "/js/out"
-                                        :pretty-print  true}}}}
-  ;; end -- clojure script support.
-
   :main luminus-clojure-test.core
   :migratus {:store :database :db ~(get (System/getenv) "DATABASE_URL")}
 
@@ -61,42 +48,38 @@
             [lein-cljsbuild "1.1.3"]]
   :clean-targets ^{:protect false}
   [:target-path [:cljsbuild :builds :app :compiler :output-dir] [:cljsbuild :builds :app :compiler :output-to]]
-  :cljsbuild
-  {:builds
-   {:app
-    {:source-paths ["src/cljc" "src/cljs"]
-     :compiler
-     {:output-to "target/cljsbuild/public/js/app.js"
-      :output-dir "target/cljsbuild/public/js/out"
-      :externs ["react/externs/react.js"]
-      :pretty-print true}}}}
+  :cljsbuild {:builds {:app {:source-paths ["src/cljc" "src/cljs"]
+                             :compiler {:output-to "target/cljsbuild/public/js/app.js"
+                                        :output-dir "target/cljsbuild/public/js/out"
+                                        :source-map    true
+                                        :externs ["react/externs/react.js"]
+                                        :optimizations :none
+                                        :main "<app>.core"
+                                        :pretty-print true}}}}
 
   :target-path "target/%s/"
-  :profiles
-  {:uberjar {:omit-source true
-             
-              :prep-tasks ["compile" ["cljsbuild" "once"]]
-              :cljsbuild
-              {:builds
-               {:app
-                {:source-paths ["env/prod/cljs"]
-                 :compiler
-                 {:optimizations :advanced
-                  :pretty-print false
-                  :closure-warnings
-                  {:externs-validation :off :non-standard-jsdoc :off}}}}}
+  :profiles {:uberjar {:omit-source true
+                       :prep-tasks ["compile" ["cljsbuild" "once"]]
+                       :cljsbuild {:builds {:app {:source-paths ["env/prod/cljs"]
+                                                  :compiler {:optimizations
+                                                             :advanced
+                                                             :pretty-print false
+                                                             :closure-warnings {:externs-validation
+                                                                                :off
+                                                                                :non-standard-jsdoc
+                                                                                :off}}}}}
 
-             :aot :all
-             :uberjar-name "luminus-clojure-test.jar"
-             :source-paths ["env/prod/clj"]
-             :resource-paths ["env/prod/resources"]}
-   ;; start --clojure script support
-   :hooks ['leiningen.cljsbuild]
-   :cljsbuild {:jar true
-               :builds {:app
-                        {:compiler
-                         {:optimizations :advanced
-                          :pretty-print false}}}}
+                       :aot :all
+                       :uberjar-name "luminus-clojure-test.jar"
+                       :source-paths ["env/prod/clj"]
+                       :resource-paths ["env/prod/resources"]}
+             ;; start --clojure script support
+             :hooks ['leiningen.cljsbuild]
+             :cljsbuild {:jar true
+                         :builds {:app
+                                  {:compiler
+                                   {:optimizations :advanced
+                                    :pretty-print false}}}}
    ;; end -- clojure script support.
    :dev           [:project/dev :profiles/dev]
    :test          [:project/test :profiles/test]
@@ -112,27 +95,20 @@
                                  [lein-doo "0.1.6"]
                                  [org.clojure/clojurescript "1.8.51"]]
                   
-                   :cljsbuild
-                   {:builds
-                    {:app
-                     {:source-paths ["env/dev/cljs"]
-                      :compiler
-                      {:main "luminus-clojure-test.app"
-                       :asset-path "/js/out"
-                       :optimizations :none
-                       :source-map true}}
-                     :test
-                     {:source-paths ["src/cljc" "src/cljs" "test/cljs"]
-                      :compiler
-                      {:output-to "target/test.js"
-                       :main "luminus-clojure-test.doo-runner"
-                       :optimizations :whitespace
-                       :pretty-print true}}}}
+                  :cljsbuild {:builds {:app {:source-paths ["env/dev/cljs"]
+                                             :compiler {:main "luminus-clojure-test.app"
+                                                        :asset-path "/js/out"
+                                                        :optimizations :none
+                                                        :source-map true}}
+                                       :test {:source-paths ["src/cljc" "src/cljs" "test/cljs"]
+                                              :compiler {:output-to "target/test.js"
+                                                         :main "luminus-clojure-test.doo-runner"
+                                                         :optimizations :whitespace
+                                                         :pretty-print true}}}}
 
-                  :figwheel
-                  {:http-server-root "public"
-                   :nrepl-port 7002
-                   :css-dirs ["resources/public/css"]}
+                  :figwheel {:http-server-root "public"
+                             :nrepl-port 7002
+                             :css-dirs ["resources/public/css"]}
                   :doo {:build "test"}
                   :source-paths ["env/dev/clj" "test/clj"]
                   :resource-paths ["env/dev/resources"]

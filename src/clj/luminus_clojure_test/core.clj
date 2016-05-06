@@ -46,8 +46,15 @@
                         :started)]
     (log/info component "started"))
   (logger/init (:log-config env))
-  ((:init defaults))
   (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app)))
 
 (defn -main [& args]
-  (start-app args))
+  (cond
+    (some #{"migrate" "rollback"} args)
+    (do
+      (mount/start #'luminus-clojure-test.config/env)
+      (migrations/migrate args (env :database-url))
+      (System/exit 0))
+    :else
+    (start-app args)))
+

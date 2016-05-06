@@ -1,11 +1,11 @@
-(ns guestbook.core
+(ns luminus-clojure-test.core
   (:require [reagent.core :as r]
             [reagent.session :as session]
             [secretary.core :as secretary :include-macros true]
             [goog.events :as events]
             [goog.history.EventType :as HistoryEventType]
             [markdown.core :refer [md->html]]
-            [guestbook.ajax :refer [load-interceptors!]]
+            [luminus-clojure-test.ajax :refer [load-interceptors!]]
             [ajax.core :refer [GET POST]])
   (:import goog.History))
 
@@ -24,7 +24,7 @@
         {:on-click #(swap! collapsed? not)} "☰"]
        [:div.collapse.navbar-toggleable-xs
         (when-not @collapsed? {:class "in"})
-        [:a.navbar-brand {:href "#/"} "guestbook"]
+        [:a.navbar-brand {:href "#/"} "luminus-clojure-test"]
         [:ul.nav.navbar-nav
          [nav-link "#/" "Home" :home collapsed?]
          [nav-link "#/about" "About" :about collapsed?]]]])))
@@ -33,12 +33,12 @@
   [:div.container
    [:div.row
     [:div.col-md-12
-     "this is the story of guestbook... work in progress"]]])
+     "this is the story of luminus-clojure-test... work in progress"]]])
 
 (defn home-page []
   [:div.container
    [:div.jumbotron
-    [:h1 "Welcome to guestbook"]
+    [:h1 "Welcome to luminus-clojure-test"]
     [:p "Time to start building your site!"]
     [:p [:a.btn.btn-primary.btn-lg {:href "http://luminusweb.net"} "Learn more »"]]]
    [:div.row

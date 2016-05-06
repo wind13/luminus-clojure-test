@@ -37,16 +37,3 @@
   {:status  (:status error-details)
    :headers {"Content-Type" "text/html; charset=utf-8"}
    :body    (parser/render-file "error.html" error-details)})
-
-(def state (atom nil))
-
-(defn input-field [label-text]
- [:div
- [:label label-text]
- [:input {:type "text"
- :value @state
- :on-change #(reset! state (-> % .-target .-value))}]])
-
-(defn render-simple []
- (reagent/render-component [input-field]
-   (.-body js/document)))

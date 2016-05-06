@@ -1,4 +1,4 @@
-(ns guestbook.ajax
+(ns luminus-clojure-test.ajax
   (:require [ajax.core :as ajax]))
 
 (defn default-headers [request]
