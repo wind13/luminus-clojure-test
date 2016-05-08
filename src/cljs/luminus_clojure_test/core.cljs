@@ -29,7 +29,7 @@
          [nav-link "#/" "Home" :home collapsed?]
          [nav-link "#/about" "About" :about collapsed?]]]])))
 
-(def state (atom "good"))
+(def state (r/atom "good"))
 (defn input-text [label-text]
   [:div
     [:label label-text]
@@ -43,7 +43,7 @@
   [:button {:on-click #(reset! state "bad !")} "click"])
 
 (defn input-field [label-text id]
-  (let [value (atom nil)]
+  (let [value (r/atom nil)]
     (fn []
       [:div
         [:label "The value is: " @value]
@@ -62,7 +62,8 @@
      (input-text "test input")
      (input-field "test input" 3)
      (btn-test)
-     "this is the story of luminus-clojure-test... work in progress"]]])
+     "this is the story of luminus-clojure-test... work in progress"]
+    [:div#test.col-md-12]]])
 
 (defn not-found []
   [:div.container [:h1 "404: Page doesn't exist"]])
