@@ -29,6 +29,13 @@
          [nav-link "#/" "Home" :home collapsed?]
          [nav-link "#/about" "About" :about collapsed?]]]])))
 
+(defn handler [response]
+  (.alert js/window (str response))
+  (.log js/console (str response)))
+(defn error-handler [{:keys [status status-text]}]
+   (.log js/console
+     (str "something bad happened: " status " " status-text)))
+
 (def state (r/atom "good"))
 (defn input-text [label-text]
   [:div
@@ -40,7 +47,7 @@
 
 (defn btn-test
   []
-  [:button {:on-click #(reset! state "bad !")} "click"])
+  [:button {:on-click #(GET "/hello" {:handler handler})} "ajax click"])
 
 (defn input-field [label-text id]
   (let [value (r/atom nil)]
@@ -61,8 +68,8 @@
     [:div.col-md-12
      (input-text "test input")
      (input-field "test input" 3)
-     (btn-test)
      "this is the story of luminus-clojure-test... work in progress"]
+    [:div.col-md-12 (btn-test)]
     [:div#test.col-md-12]]])
 
 (defn not-found []
