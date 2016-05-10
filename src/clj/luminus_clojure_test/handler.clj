@@ -2,6 +2,7 @@
   (:require [compojure.core :refer [routes wrap-routes]]
             [luminus-clojure-test.layout :refer [error-page]]
             [luminus-clojure-test.routes.home :refer [home-routes]]
+            [luminus-clojure-test.routes.services :refer [service-routes]]
             [compojure.route :as route]
             [luminus-clojure-test.env :refer [defaults]]
             [mount.core :as mount]
@@ -13,6 +14,7 @@
 
 (def app-routes
   (routes
+    #'service-routes
     (-> #'home-routes
         (wrap-routes middleware/wrap-csrf)
         (wrap-routes middleware/wrap-formats))
