@@ -1,5 +1,8 @@
 (ns luminus-clojure-test.routes.services
   (:require [ring.util.http-response :refer :all]
+            [conman.core :as conman]
+            [clojure.tools.logging :as log]
+            [luminus-clojure-test.db.core :refer [*db*] :as db]
             [compojure.api.sweet :refer :all]
             [schema.core :as s]))
 
@@ -40,4 +43,22 @@
       :return      Long
       :header-params [x :- Long, y :- Long]
       :summary     "x^y with header-parameters"
-      (ok (long (Math/pow x y))))))
+      (ok (long (Math/pow x y))))
+
+    (GET "/users" []
+      :return String
+      :summary     "test get user from db."
+      (log/info (db/get-user {:id "foo"}))
+      (ok (str (db/get-user {:id "foo"}))))
+
+    (GET "/create" []
+      :return Boolean
+      :summary "test create user."
+
+      (db/create-user!
+        {:id "foo"
+         :first_name "Sam"
+         :last_name "Smith"
+         :email "sam.smith@example.com"})
+
+      (ok true))))
