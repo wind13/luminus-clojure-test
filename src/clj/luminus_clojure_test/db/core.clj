@@ -14,8 +14,3 @@
           :stop (conman/disconnect! *db*))
 
 (conman/bind-connection *db* "sql/queries.sql")
-
-;; Start the database
-(mount/start
-      #'luminus-clojure-test.config/env
-      #'luminus-clojure-test.db.core/*db*)

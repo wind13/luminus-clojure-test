@@ -45,20 +45,8 @@
       :summary     "x^y with header-parameters"
       (ok (long (Math/pow x y))))
 
-    (GET "/users" []
+    (GET "/user" []
       :return String
-      :summary     "test get user from db."
+      :summary     "test get user foo from db."
       (log/info (db/get-user {:id "foo"}))
-      (ok (str (db/get-user {:id "foo"}))))
-
-    (GET "/create" []
-      :return Boolean
-      :summary "test create user."
-
-      (db/create-user!
-        {:id "foo"
-         :first_name "Sam"
-         :last_name "Smith"
-         :email "sam.smith@example.com"})
-
-      (ok true))))
+      (ok (str (db/get-user {:id "foo"}))))))

@@ -39,38 +39,30 @@
 (def state (r/atom "good"))
 (defn input-text [label-text]
   [:div
-    [:label label-text]
-    [:input {:type "text"
-             :value @state
-             :on-change #(reset! state (-> % .-target .-value))}]
-    [:label @state]])
+    [:div
+      [:label label-text]
+      [:input {:type "text"
+               :value @state
+               :on-change #(reset! state (-> % .-target .-value))}]]
+    [:div (str "and change here: " @state)]])
 
-(defn btn-test
-  []
+(defn btn-test []
   [:button {:on-click #(GET "/hello" {:handler handler})} "ajax click"])
 
-(defn input-field [label-text id]
-  (let [value (r/atom nil)]
-    (fn []
-      [:div
-        [:label "The value is: " @value]
-        [:input {:type "text"
-                 :value @value
-                 :on-change #(reset! value (-> % .-target .-value))}]])))
-
-(defn render-simple []
-  (r/render-component [input-field]
-    (.-body js/document)))
+(defn btn-api
+  []
+  [:button
+    {:on-click #((.log js/console "test api")
+                 (GET "/api/times" {:handler handler}))}
+    "api times"])
 
 (defn about-page []
   [:div.container
    [:div.row
     [:div.col-md-12
-     (input-text "test input")
-     (input-field "test input" 3)
+     (input-text "test input: ")
      "this is the story of luminus-clojure-test... work in progress"]
-    [:div.col-md-12 (btn-test)]
-    [:div#test.col-md-12]]])
+    [:div.col-md-12 (btn-test)]]])
 
 (defn not-found []
   [:div.container [:h1 "404: Page doesn't exist"]])
